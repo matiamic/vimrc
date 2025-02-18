@@ -44,17 +44,31 @@ Plug 'ctrlpvim/ctrlp.vim'
 "solarized color theme
 Plug 'altercation/vim-colors-solarized'
 
+"solarized for neovim
+if has('nvim')
+    Plug 'craftzdog/solarized-osaka.nvim'
+endif
+
+"highlighting for ARM asm
+Plug 'ARM9/arm-syntax-vim'
+
 call plug#end()
 "end of vim-plug
 
 set background=dark
 colorscheme solarized
+if has('nvim')
+    colorscheme solarized-osaka
+endif
 
 " Set utf-8 as standard encoding
 set encoding=utf-8
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
+
+" set listchars for :set list
+set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 
 "Spliting will open new window on the right or below from active window
 set splitright splitbelow
@@ -64,6 +78,12 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+
+"split navigations w/o <C-W> for terminal mode
+tnoremap <C-J> <C-W><C-J>
+tnoremap <C-K> <C-W><C-K>
+tnoremap <C-L> <C-W><C-L>
+tnoremap <C-H> <C-W><C-H>
 
 "map escape to turn off highlights the second line is to prevent a bug
 nnoremap <silent><esc> :noh <CR>
@@ -95,6 +115,8 @@ set cinoptions+=c2 "indent multi-line comments by 2
 set cinoptions+=(0 "when in function, the arguments on new line are alligned to opening brace
 set cinoptions+=Ws,k2s "when the line is too long, this may be handy
 
+autocmd FileType javascript setlocal shiftwidth=2
+
 "folding
 set foldmethod=syntax "folds given by syntax
 set foldnestmax=1 "only top level entities
@@ -105,6 +127,9 @@ autocmd FileType python setlocal foldnestmax=2
 "show extra whitespace:
 au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match ExtraWhitespace /\s\+$/
 highlight ExtraWhitespace ctermbg=red guibg=red
+
+"setup ARM asm highlighting
+au BufNewFile,BufRead *.s,*.S set filetype=arm " arm = armv6/7
 
 "support for mouse
 set mouse=a
@@ -139,3 +164,8 @@ set showcmd
 
 "No modelines (modelines are special lines for vim in at the beginning of a file)
 set nomodeline
+
+if has('nvim')
+    tnoremap <Esc> <C-\><C-n>
+endif
+
